@@ -1,13 +1,32 @@
 import { Link } from 'react-router-dom';
-import profile from '../../../assets/others/profile.png'
+// import profile from '../../../assets/others/profile.png'
+import { useContext } from 'react';
+import { AuthContext } from '../../../Providers/AuthProvider';
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext)
+    const handleLogOut =()=>{
+        logOut()
+        .then(()=>{})
+        .catch(error=>console.log(error))
+    }
     const navOptoins = <>
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/">Contact US</Link></li>
-        <li><Link to="/">DASHBOARD</Link></li>
-        <li><Link to="/menu">Our Menu</Link></li>  
-        <li><Link to="/order/salad">Order Food</Link>
-        </li>
+        {/* <li><Link to="/">Contact US</Link></li>
+        <li><Link to="/">DASHBOARD</Link></li> */}
+        <li><Link to="/menu">Our Menu</Link></li>
+        <li><Link to="/secret">Secret</Link></li>
+        <li><Link to="/order/salad">Order Food</Link></li>
+        {
+            user ? <>
+                    <button onClick={handleLogOut} className="btn btn-outline  shadow-2xl border-0 border-b-4 hover:text-yellow-600 my-3 text-white border-yellow-600 hover:border-b-yellow-600">LogOut</button>
+                    <span>{user?.displayName}</span>
+            </> :
+                <>
+                    <li><Link to="/login">Login</Link></li>
+
+                </>
+        }
+
     </>
     return (
         <>
@@ -22,20 +41,20 @@ const NavBar = () => {
                         </ul>
                     </div>
                     <div className='space-y-0'>
-                    <a className="btn btn-ghost  text-xl uppercase">Bistro Boss</a>
-                    <br />
-                    <p className='tracking-widest md:ms-4 uppercase '>Restaurant</p>
+                        <a className="btn btn-ghost  text-xl uppercase">Bistro Boss</a>
+                        <br />
+                        <p className='tracking-widest md:ms-4 uppercase '>Restaurant</p>
                     </div>
                 </div>
-                <div className="navbar-end hidden lg:flex">
-                    <ul className="menu menu-horizontal px-1 uppercase pr-3">
+                <div className="navbar-center hidden lg:flex">
+                    <ul className="menu menu-horizontal px-1 uppercase">
                         {navOptoins}
                     </ul>
                 </div>
-                <div className="md:pr-3 navbar-end">
+                {/* <div className="md:pr-12">
                     <a className="btn btn-link text-white no-underline">sign Out</a>
                     <img className='w-[30px] rounded-full' src={profile} alt="" />
-                </div>
+                </div> */}
             </div>
         </>
     );

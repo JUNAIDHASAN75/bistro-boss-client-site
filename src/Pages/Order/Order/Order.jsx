@@ -8,7 +8,7 @@ import OrderTab from "../OrderTab/OrderTab";
 import { useParams } from "react-router-dom";
 
 const Order = () => {
-    const categories = ['salad', 'pizza', 'soup', 'dessert', 'drinks']
+    const categories = ['salad', 'pizza', 'soup', 'desserts', 'drinks']
     const { category } = useParams();
     console.log(category)
     const initialIndex = categories.indexOf(category)
