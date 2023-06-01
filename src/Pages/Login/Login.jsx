@@ -5,8 +5,10 @@ import imgAuth from '../../assets/others/authentication2.png'
 import { AuthContext } from '../../Providers/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 const Login = () => {
     const [disabled, setDisabled] = useState(true)
+    console.log(disabled)
     const {singIn} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
@@ -49,8 +51,8 @@ const Login = () => {
         }
     }
     return (
-        <div className="m-auto bg_img h-[100vh] flex items-center">
-            <div className="hero h-[80vh] bg-base-200 w-[90%] shadow-slate-500 shadow-2xl m-auto img-two">
+        <div className="m-auto bg_img h-[970px] flex items-center">
+            <div className="hero h-[732px] bg-base-200 w-[80%] shadow-slate-500 shadow-2xl m-auto img-two">
                 <div className="hero-content flex-col lg:flex-row">
                     <div className="text-center lg:text-left">
                         <img src={imgAuth} alt="" />
@@ -80,10 +82,13 @@ const Login = () => {
                                 <input  onBlur={handleValidateCaptcha}  type="text" name="captcha"  placeholder="type the text above" className="input input-bordered" />
                             </div>
                             <div className="form-control mt-6">
+                                {/* TODO : make btn disabled for captha */}
                                 <input disabled={disabled} className="btn btn-outline bg-slate-100 shadow-2xl border-0 border-b-4 hover:text-yellow-600 my-3 text-yellow-600 hover:border-b-yellow-600" type="submit" value="Login" />
                             </div>
                         </form>
                         <p className='text-center text-orange-600'><small>New Here? <Link className='font-bold' to="/signup">Create a New Account</Link> </small></p>
+                        <SocialLogin></SocialLogin>
+                        
                     </div>
                 </div>
             </div>

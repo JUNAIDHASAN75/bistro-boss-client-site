@@ -4,43 +4,60 @@ import { useForm } from 'react-hook-form';
 import { useContext } from 'react';
 import { AuthContext } from '../../Providers/AuthProvider';
 import Swal from 'sweetalert2';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 
 
 const SignUp = () => {
-    const { register, handleSubmit,reset, formState: { errors } } = useForm();
-    const {createUser,updateUserProfile} = useContext(AuthContext)
-    const navigate =useNavigate()
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { createUser, updateUserProfile } = useContext(AuthContext)
+    const navigate = useNavigate()
     const onSubmit = data => {
         console.log(data)
         createUser(data.email, data.password)
-        .then(result=>{
-            const newUser = result.user;
-            console.log(newUser)
-            updateUserProfile(data.name, data.photoURL)
-            .then(()=>{
-                console.log('user profile info updated')
-                reset()
-                Swal.fire({
-                    title: 'name and photo Updated',
-                    showClass: {
-                      popup: 'animate__animated animate__fadeInDown'
-                    },
-                    hideClass: {
-                      popup: 'animate__animated animate__fadeOutUp'
-                    }
-                  })
-                  navigate('/')
+            .then(result => {
+                const newUser = result.user;
+                console.log(newUser)
+                updateUserProfile(data.name, data.photoURL)
+                    .then(() => {
+                        console.log('user profile info updated')
+                        const savedUser = { name: data.name, email: data.email }
+                        fetch('http://localhost:5000/users', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(savedUser)
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data.insertedId){
+                                    reset()
+                                    Swal.fire({
+                                        title: 'name and photo Updated',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeInDown'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOutUp'
+                                        }
+                                    })
+                                }
+                                console.log(data)
+                               
+
+                            })
+                        navigate('/')
+                    })
+                    .catch(error => console.log(error))
             })
-            .catch(error=>console.log(error))
-        })
     };
 
 
 
     return (
-        <div className="m-auto bg_img h-[100vh] flex items-center">
-            <div className="hero h-[80vh] bg-base-200 w-[90%] shadow-slate-500 shadow-2xl m-auto img-two">
+        <div className="m-auto bg_img h-[970px] flex items-center">
+            <div className="hero h-[732px] bg-base-200 w-[80%] shadow-slate-500 shadow-2xl m-auto img-two">
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left">
 
@@ -60,7 +77,7 @@ const SignUp = () => {
                                 <label className="label">
                                     <span className="label-text">Photo URL</span>
                                 </label>
-                                <input type="text"  {...register("photoURL", { required: true })}  placeholder="Photo URL" className="input input-bordered" />
+                                <input type="text"  {...register("photoURL", { required: true })} placeholder="Photo URL" className="input input-bordered" />
                                 {errors.photoURL && <span className='text-red-600'>Photo URL is required</span>}
                             </div>
                             <div className="form-control">
@@ -74,16 +91,16 @@ const SignUp = () => {
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" {...register("password", { 
-                                    required: true, 
-                                    minLength: 6, 
-                                    maxLength: 20 ,
-                                    pattern:/(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/
-                                    })} name="password" placeholder="password" className="input input-bordered" />
-                                {errors.password?.type === 'required' && <p  className='text-red-600' role="alert">Password is required</p>}
-                                {errors.password?.type === 'minLength' && <p  className='text-red-600' role="alert">Password must be six characters</p>}
-                                {errors.password?.type === 'maxLength' && <p  className='text-red-600' role="alert">Password must be less than characters</p>}
-                                {errors.password?.type === 'pattern' && <p  className='text-red-600' role="alert">Password must have one uppercase,one lowercase, one number and one special character</p>}
+                                <input type="password" {...register("password", {
+                                    required: true,
+                                    minLength: 6,
+                                    maxLength: 20,
+                                    pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/
+                                })} name="password" placeholder="password" className="input input-bordered" />
+                                {errors.password?.type === 'required' && <p className='text-red-600' role="alert">Password is required</p>}
+                                {errors.password?.type === 'minLength' && <p className='text-red-600' role="alert">Password must be six characters</p>}
+                                {errors.password?.type === 'maxLength' && <p className='text-red-600' role="alert">Password must be less than characters</p>}
+                                {errors.password?.type === 'pattern' && <p className='text-red-600' role="alert">Password must have one uppercase,one lowercase, one number and one special character</p>}
 
                             </div>
                             {/* gender */}
@@ -104,6 +121,7 @@ const SignUp = () => {
                             </div>
                         </form>
                         <p className='text-center text-orange-600'><small>Already have an Account? <Link className='font-bold' to="/login">Go To Login</Link> </small></p>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>
